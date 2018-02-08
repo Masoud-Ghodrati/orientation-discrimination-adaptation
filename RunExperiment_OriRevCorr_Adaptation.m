@@ -78,9 +78,9 @@ stim.NumberofBlocks = ['     Number of Blocks ' num2str(stim.NumBlock) '        
 % pause()
 % Define saving parameters
 % stim.fold = 'C:\data\Masoud_Psycho_Task\Version2\';
-stim.fold = cd;
+stim.fold = [cd '\'];
 stim.fName = 'Behavioral_Exp_Subject_test';
-stim = OriRevCorrStimHartley_MasV2_Adaptation_Grating(stim);
+stim = orientation_discrimination_adaptation(stim);
 
 
 %% analysis part

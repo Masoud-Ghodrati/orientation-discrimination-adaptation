@@ -1,4 +1,4 @@
-function stim = OriRevCorrStimHartley_MasV2_Adaptation_Grating(stim)
+function stim = orientation_discrimination_adaptation(stim)
 
 try
     
@@ -66,11 +66,11 @@ screenNumber = max(Screen('Screens'));
 % BitsPlusIdentityClutTest([],1)
 PsychImaging('PrepareConfiguration');
 % PsychImaging('AddTask', 'General', 'EnableNative10BitFramebuffer');
-PsychImaging('AddTask','General','FloatingPoint32Bit');
+% PsychImaging('AddTask','General','FloatingPoint32Bit');
 PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'ClampOnly');
 % PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma');
 % if stim.DIO
-PsychImaging('AddTask', 'General', 'EnableBits++Mono++Output');
+% PsychImaging('AddTask', 'General', 'EnableBits++Mono++Output');
 % end
 o=Screen('Preference','Verbosity',1);
 [scr.win,scr.rect] = PsychImaging('OpenWindow',screenNumber,stim.BackGrLum,[]);
@@ -354,12 +354,12 @@ for tr = 1 : stim.nScene
     stim.Response(:, tr) = [RT Ans TestS1Ori TestS2Ori TestS1Ori-TestS2Ori find(keyCode) stim.AllStim{2,tr}];
     if stim.Feedback
         if Ans==1
-            [wavedata freq ] = wavread([stim.fold 'correct.wav']); % load sound file (make sure that it is in the same folder as this script
+            [wavedata freq ] = audioread([stim.fold 'correct.wav']); % load sound file (make sure that it is in the same folder as this script
             Snd('Play',wavedata',freq');
             Screen('Flip', scr.win);
             WaitSecs(2) %waits 6 seconds for sound to play,if this wait is too short then sounds will be cutoff
         else
-            [wavedata freq ] = wavread([stim.fold 'wrong.wav']); % load sound file (make sure that it is in the same folder as this script
+            [wavedata freq ] = audioread([stim.fold 'wrong.wav']); % load sound file (make sure that it is in the same folder as this script
             Snd('Play',wavedata',freq');
             Screen('Flip', scr.win);
             WaitSecs(2) %waits 6 seconds for sound to play,if this wait is too short then sounds will be cutoff
