@@ -22,5 +22,5 @@ NoiseImg = real(ifft2(fftshift(S).* exp(1i*Phase)));
 NoiseImg = (NoiseImg-min(NoiseImg(:)))./(max(NoiseImg(:))-min(NoiseImg(:)));
 ThisCont = st(2, sc-1); 
 ThisLum = st(3, sc-1); 
-NoiseImg = imadjust(NoiseImg, [0 1],[ThisLum-(ThisCont/2) ThisLum+(ThisCont/2)]);
+NoiseImg = imadjust(NoiseImg, [0 1],[max(ThisLum-(ThisCont/2), 0), max(ThisLum+(ThisCont/2), 0)]);
 NoiseImg(fr>=F(end)) = stim.BackGrLum;

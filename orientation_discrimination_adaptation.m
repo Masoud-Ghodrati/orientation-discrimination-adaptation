@@ -17,7 +17,7 @@ try
     
     Screen('TextSize',scr.win,30);
     Screen('TextStyle',scr.win,2);
-    DrawFormattedText(scr.win, MyText, 'center', 'center', scr.white*[0 0 0]);
+    DrawFormattedText(scr.win, MyText, 'center', 'center', scr.white*[1 1 1]/2);
     Screen('Flip', scr.win);
     KbStrokeWait;
     
@@ -66,9 +66,9 @@ screenNumber = max(Screen('Screens'));
 % BitsPlusIdentityClutTest([],1)
 PsychImaging('PrepareConfiguration');
 % PsychImaging('AddTask', 'General', 'EnableNative10BitFramebuffer');
-% PsychImaging('AddTask','General','FloatingPoint32Bit');
+PsychImaging('AddTask','General','FloatingPoint32Bit');
 PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'ClampOnly');
-% PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma');
+PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma');
 % if stim.DIO
 % PsychImaging('AddTask', 'General', 'EnableBits++Mono++Output');
 % end
@@ -80,9 +80,9 @@ scr.width = stim.ScrWidth;     % (mm) width
 % scr.pixelSize = 520/1920; % widtSaved to c:\data\marmo\OriRevCorr\OriRevCorr_Mas0134.math (mm) / width (pixels)
 scr.viewDist = stim.ScrViewDist;  % (mm)
 
-% gamma1=2.3996; % measured on 11 April 14
+gamma1=2.3996; % measured on 11 April 14
 % use this command for gamma correction in your codes
-% PsychColorCorrection('SetEncodingGamma',scr.win,1/gamma1);
+PsychColorCorrection('SetEncodingGamma',scr.win,1/gamma1);
 
 Screen('Flip', scr.win, 0, 0);
 [oldmaximumvalue oldclampcolors] = Screen('ColorRange', scr.win, 1024);

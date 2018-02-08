@@ -8,7 +8,7 @@ stim.centDeg = [0 0]; % (deg) x-y position of stimulus center
 stim.diamDeg = 6.5;    % (deg) specifies circular aperture; two values define a rectangle
 stim.frPerScene = 2;  % number of frames per grating presentation for adaptation period (2 frames at 120 Hz gives 60 Hz)
 
-stim.AdaptContList = [30 60]/100; % [30 60]/100; list of contrasts (max 2 contrasts)
+stim.AdaptContList = [10 70]/100; % [30 60]/100; list of contrasts (max 2 contrasts)
 stim.AdaptLumList = [30 30]/100;  % [30 70]/100; list of luminances (max 2 contrasts)
 stim.AdaptOriList = 0:15:165;     % (deg) list of orientations to randomise
 stim.AdaptPhaseList = 0:45:315;   % (deg) list of phases to randomise
