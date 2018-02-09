@@ -220,19 +220,55 @@ for tr = 1 : stim.nScene
         
         % ISI
         sc = sc +1;
-        if mean(st(1:end-1, st(end,:)==3)) == -1
-            imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
-        elseif mean(st(1:end-1, st(end,:)==3)) == -2
-            NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
-            imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
+        if stim.DynamicNoise == true
+            
+            if mean(st(1:end-1, st(end,:)==3)) == -1
+                
+                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
+                for fr = 1 : stim.TestISIStim
+                    Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                    Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
+                    Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
+                    [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
+                    stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
+                    
+                end
+                
+            elseif mean(st(1:end-1, st(end,:)==3)) == -2
+                
+                for fr = 1 : stim.TestISIStim
+                    
+                    NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
+                    imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
+                    Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                    Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
+                    Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
+                    [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
+                    stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
+                    
+                end
+                
+            end
+            
+            
+        elseif  stim.DynamicNoise == false
+            
+            if mean(st(1:end-1, st(end,:)==3)) == -1
+                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
+            elseif mean(st(1:end-1, st(end,:)==3)) == -2
+                NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
+                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
+            end
+            for fr = 1 : stim.TestISIStim
+                Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
+                Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
+                [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
+                stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
+            end
+            
         end
-        for fr = 1 : stim.TestISIStim
-            Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
-            Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
-            Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
-            [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
-            stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
-        end
+        
         
         % Test stim 1
         sc = sc +1;
@@ -301,19 +337,52 @@ for tr = 1 : stim.nScene
         
         % ISI
         sc = sc +1;
-        if mean(st(1:end-1, st(end,:)==3)) == -1
-            imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
-        elseif mean(st(1:end-1, st(end,:)==3)) == -2
-            NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
-            imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
+        if stim.DynamicNoise == true
+            
+            if mean(st(1:end-1, st(end,:)==3)) == -1
+                
+                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
+                for fr = 1 : stim.TestISIStim
+                    Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                    Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
+                    Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
+                    [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
+                    stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
+                end
+                
+            elseif mean(st(1:end-1, st(end,:)==3)) == -2
+                
+                for fr = 1 : stim.TestISIStim
+                    NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
+                    imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
+                    Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                    Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
+                    Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
+                    [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
+                    stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
+                end
+                
+            end
+            
+        elseif stim.DynamicNoise == false
+            
+            if mean(st(1:end-1, st(end,:)==3)) == -1
+                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
+            elseif mean(st(1:end-1, st(end,:)==3)) == -2
+                NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
+                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
+            end
+            for fr = 1 : stim.TestISIStim
+                Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
+                Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
+                [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
+                stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
+            end
+            
         end
-        for fr = 1 : stim.TestISIStim
-            Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
-            Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
-            Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
-            [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
-            stim.ElpsTim{3,tr}(fr) = 1000*TimFre;
-        end
+        
+        
         
         % Test stim 2
         sc = sc +1;

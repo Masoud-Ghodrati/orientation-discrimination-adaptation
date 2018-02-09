@@ -3,7 +3,7 @@ close all
 clc
 
 SubjName = 'Mas';
-NumSession = 14;
+NumSession = 0;
 
 % 1-8
 % 9-11
