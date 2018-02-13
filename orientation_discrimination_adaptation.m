@@ -73,7 +73,7 @@ PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamm
 % PsychImaging('AddTask', 'General', 'EnableBits++Mono++Output');
 % end
 o=Screen('Preference','Verbosity',1);
-[scr.win,scr.rect] = PsychImaging('OpenWindow',screenNumber,stim.BackGrLum,[]);
+[scr.win,scr.rect] = PsychImaging('OpenWindow',screenNumber, stim.BackGrLum,[]);
 Screen('Preference','Verbosity',o);
 %% Define VPIXX parameters
 scr.width = stim.ScrWidth;     % (mm) width
@@ -192,13 +192,14 @@ BLKCounter = 1;
 
 PerBlock = zeros(1, stim.RestEvery+1);
 trblk = 1;
+
 for tr = 1 : stim.nScene
     
     % Choose contrast / orientation / phase /sf for this scene
     st = stim.AllStim{1,tr};
     TestS1Ori = unique(st(1,st(end,:)==2));
     TestS2Ori = unique(st(1,st(end,:)==4));
-    
+       
     if stim.AllStim{2,tr} == 100
         
         sc = 1;
@@ -207,10 +208,12 @@ for tr = 1 : stim.nScene
         thisStim.lum = st(3, sc);
         thisStim.phase = st(4, sc);
         thisStim.sf = st(5, sc);
-        
+        stim.BackGrLum = thisStim.lum;
         % Test stim 1
-        gTex = CreateProceduralSineGrating(scr.win, stim.diamPix(1), stim.diamPix(2), thisStim.lum*[1 1 1 0],round(stim.diamPix(1)/2),0.5);
+        gTex = CreateProceduralSineGrating(scr.win, stim.diamPix(1), stim.diamPix(2), thisStim.lum*[1 1 1 0],round(stim.diamPix(1)/2), 0.5);
+        fullWindowMask = Screen('MakeTexture', scr.win, ones(scr.rect(4), scr.rect(3)) .* scr.white*stim.BackGrLum);
         for fr = 1 : stim.TestStim_S1
+            Screen('DrawTexture', scr.win, fullWindowMask);
             Screen('DrawTexture', scr.win, gTex,[],destRect,270-thisStim.ori,[],[],[],[],[],[180-thisStim.phase, thisStim.sf, thisStim.cont, 0]);
             Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
             Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -224,9 +227,10 @@ for tr = 1 : stim.nScene
             
             if mean(st(1:end-1, st(end,:)==3)) == -1
                 
-                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
+                imageTextureISI = Screen('MakeTexture', scr.win, im2uint8( scr.white*stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
                 for fr = 1 : stim.TestISIStim
-                    Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                    Screen('DrawTexture', scr.win, fullWindowMask);
+                    Screen('DrawTexture', scr.win, imageTextureISI,[], destRect);
                     Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
                     Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
                     [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
@@ -240,7 +244,8 @@ for tr = 1 : stim.nScene
                     
                     NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
                     imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
-                    Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
+                    Screen('DrawTexture', scr.win, imageTextureISI,[], destRect);
+                    Screen('DrawTexture', scr.win, fullWindowMask);
                     Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
                     Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
                     [VBLTimestamp, TimFre] = Screen('Flip', scr.win, 0, 0); % wait for end of frame and show stimulus
@@ -260,6 +265,7 @@ for tr = 1 : stim.nScene
                 imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
             end
             for fr = 1 : stim.TestISIStim
+                Screen('DrawTexture', scr.win, fullWindowMask);
                 Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
                 Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
                 Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -270,7 +276,7 @@ for tr = 1 : stim.nScene
         end
         
         
-        % Test stim 1
+        % Test stim 2
         sc = sc +1;
         thisStim.ori = st(1, sc);
         thisStim.cont = st(2, sc);
@@ -279,6 +285,7 @@ for tr = 1 : stim.nScene
         thisStim.sf = st(5, sc);
         keyIsDown = 0;
         gTex = CreateProceduralSineGrating(scr.win, stim.diamPix(1), stim.diamPix(2), thisStim.lum*[1 1 1 0],round(stim.diamPix(1)/2),0.5);
+        Screen('DrawTexture', scr.win, fullWindowMask);
         Screen('DrawTexture', scr.win, gTex,[],destRect,270-thisStim.ori,[],[],[],[],[],[180-thisStim.phase, thisStim.sf, thisStim.cont, 0]);
         Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
         Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -294,7 +301,7 @@ for tr = 1 : stim.nScene
             thisStim.lum = st(3, sc);
             thisStim.phase = st(4, sc);
             thisStim.sf = st(5, sc);
-            
+            stim.BackGrLum = thisStim.lum;
             if sc == 1
                 gTex = CreateProceduralSineGrating(scr.win, stim.diamPix(1), stim.diamPix(2), thisStim.lum*[1 1 1 0],round(stim.diamPix(1)/2),0.5);
             elseif diff([st(2,sc-1), st(2,sc)])~=0 || diff([st(3,sc-1),st(3,sc)])~=0
@@ -302,8 +309,9 @@ for tr = 1 : stim.nScene
             end
             
             % Loop over video frames
+            fullWindowMask = Screen('MakeTexture', scr.win, ones(scr.rect(4), scr.rect(3)) .* scr.white*stim.BackGrLum);
             for fr = 1: stim.frPerScene,
-                
+                Screen('DrawTexture', scr.win, fullWindowMask);
                 Screen('DrawTexture', scr.win, gTex,[],destRect,360-thisStim.ori,[],[],[],[],[],[180-thisStim.phase, thisStim.sf, thisStim.cont, 0]);
                 Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
                 Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -326,8 +334,11 @@ for tr = 1 : stim.nScene
         thisStim.lum = st(3, sc);
         thisStim.phase = st(4, sc);
         thisStim.sf = st(5, sc);
+        stim.BackGrLum = thisStim.lum;
         gTex = CreateProceduralSineGrating(scr.win, stim.diamPix(1), stim.diamPix(2), thisStim.lum*[1 1 1 0],round(stim.diamPix(1)/2),0.5);
+        fullWindowMask = Screen('MakeTexture', scr.win, ones(scr.rect(4), scr.rect(3)) .* scr.white*stim.BackGrLum);
         for fr = 1 : stim.TestStim_S1
+            Screen('DrawTexture', scr.win, fullWindowMask);
             Screen('DrawTexture', scr.win, gTex,[],destRect,270-thisStim.ori,[],[],[],[],[],[180-thisStim.phase, thisStim.sf, thisStim.cont, 0]);
             Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
             Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -343,6 +354,7 @@ for tr = 1 : stim.nScene
                 
                 imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(stim.BackGrLum*ones(destRect(3)-destRect(1))),[],[]);
                 for fr = 1 : stim.TestISIStim
+                    Screen('DrawTexture', scr.win, fullWindowMask);
                     Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
                     Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
                     Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -355,6 +367,7 @@ for tr = 1 : stim.nScene
                 for fr = 1 : stim.TestISIStim
                     NoisISI = OrientedNoise_ISI(stim, 0, scr, sc, st);
                     imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
+                    Screen('DrawTexture', scr.win, fullWindowMask);
                     Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
                     Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
                     Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -373,6 +386,7 @@ for tr = 1 : stim.nScene
                 imageTextureISI = Screen('MakeTexture', scr.win, im2uint8(NoisISI), [], []);
             end
             for fr = 1 : stim.TestISIStim
+                Screen('DrawTexture', scr.win, fullWindowMask);
                 Screen('DrawTexture', scr.win, imageTextureISI,[],destRect);
                 Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
                 Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -381,7 +395,6 @@ for tr = 1 : stim.nScene
             end
             
         end
-        
         
         
         % Test stim 2
@@ -393,6 +406,7 @@ for tr = 1 : stim.nScene
         thisStim.sf = st(5, sc);
         keyIsDown = 0;
         gTex = CreateProceduralSineGrating(scr.win, stim.diamPix(1), stim.diamPix(2), thisStim.lum*[1 1 1 0],round(stim.diamPix(1)/2),0.5);
+        Screen('DrawTexture', scr.win, fullWindowMask);
         Screen('DrawTexture', scr.win, gTex,[],destRect,270-thisStim.ori,[],[],[],[],[],[180-thisStim.phase, thisStim.sf, thisStim.cont, 0]);
         Screen('FillOval', scr.win, scr.white*stim.BackGrLum*[1 1 1], [FixFrame(1) FixFrame(2) FixFrame(3) FixFrame(4)],[]);
         Screen('DrawLines', scr.win, allCoords, stim.lineWidthPix, scr.white*stim.TestFixationColor, [scr.center(1)+stim.centPixFix(1), scr.center(2)+stim.centPixFix(2)], []);
@@ -420,6 +434,7 @@ for tr = 1 : stim.nScene
         Ans = 1;
     end
     
+    Screen('DrawTexture', scr.win, fullWindowMask);
     stim.Response(:, tr) = [RT Ans TestS1Ori TestS2Ori TestS1Ori-TestS2Ori find(keyCode) stim.AllStim{2,tr}];
     if stim.Feedback
         if Ans==1

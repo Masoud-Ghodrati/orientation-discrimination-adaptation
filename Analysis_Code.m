@@ -3,13 +3,13 @@ close all
 clc
 
 SubjName = 'Mas';
-NumSession = 0;
+NumSession = 1;
 
 % 1-8
 % 9-11
 % 12-13
 AllRe = [];
-for s = 12 : NumSession
+for s = 0 : NumSession
     
     load(['Behavioral_Exp_Subject_' SubjName num2str(s,'%0.4d') '.mat'])
     AllRe = [AllRe stimLists.Response];
@@ -36,6 +36,7 @@ for j = 1 : length(Ind)
     end
 end
 
+figure
 for j = 1 : length(Ind)
     
     if j<=2
@@ -47,9 +48,9 @@ for j = 1 : length(Ind)
     plot(stim.TestOriDiff, Perf{j}(1, length(stim.TestOriDiff)+1:end), '-o', 'color', Color(j,:)), hold on
     
     if j==2
-        legend('','discrimination','','adaptation')
+        legend('','discrimination','','adaptation', 'location', 'best')
     elseif j==4
-        legend('','early','','late')
+        legend('','early','','late', 'location', 'best')
     end
     xlabel('\Delta Ori')
     ylabel('RT (ms)')
@@ -68,10 +69,22 @@ for j = 1 : length(Ind)
     plot(fliplr(-stim.TestOriDiff), 1-Perf{j}(2,1:length(stim.TestOriDiff)), '-o', 'color', Color(j,:)), hold on
     plot(stim.TestOriDiff, Perf{j}(2, length(stim.TestOriDiff)+1:end), '-o', 'color', Color(j,:)), hold on
     if j==2
-        legend('','discrimination','','adaptation')
+        legend('','discrimination','','adaptation', 'location', 'best')
     elseif j==4
-        legend('','early','','late')
+        legend('','early','','late', 'location', 'best')
     end
+%     x = [fliplr(-stim.TestOriDiff) stim.TestOriDiff];
+%     y = [1-Perf{j}(2,1:length(stim.TestOriDiff)) Perf{j}(2, length(stim.TestOriDiff)+1:end)];
+%     %     [fitresult, gof] = exp_Fit(x, y);
+%     [fitresult, gof] = calculated_Sigmoid_Fit(x, y);
+%     xft = linspace(x(1), x(end), 100);
+%     %     yft = fitresult.a./(1+exp(-(xft-fitresult.b))/fitresult.c);
+%     yft = fitresult.b + ((fitresult.a - fitresult.b)./(1+exp(xft-fitresult.c)/fitresult.d));
+%     plot(xft, yft , 'color', Color(j,:))
+    plot([fliplr(-stim.TestOriDiff) stim.TestOriDiff], 0.5*ones(2*size(stim.TestOriDiff)), ':k')
+    plot([0 0], [0 1], ':k')
     xlabel('\Delta Ori')
     ylabel('Response')
 end
+
+

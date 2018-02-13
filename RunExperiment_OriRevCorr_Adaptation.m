@@ -8,8 +8,8 @@ stim.centDeg = [0 0]; % (deg) x-y position of stimulus center
 stim.diamDeg = 6.5;    % (deg) specifies circular aperture; two values define a rectangle
 stim.frPerScene = 2;  % number of frames per grating presentation for adaptation period (2 frames at 120 Hz gives 60 Hz)
 
-stim.AdaptContList = [10 100]/100; % [30 60]/100; list of contrasts (max 2 contrasts)
-stim.AdaptLumList = [50 50]/100;  % [30 70]/100; list of luminances (max 2 contrasts)
+stim.AdaptContList = [20 20]/100; % [30 60]/100; list of contrasts (max 2 contrasts)
+stim.AdaptLumList = [30 70]/100;  % [30 70]/100; list of luminances (max 2 contrasts)
 stim.AdaptOriList = 0 : 15 : 165;     % (deg) list of orientations to randomise
 stim.AdaptPhaseList = 0 : 45 : 315;   % (deg) list of phases to randomise
 stim.AdaptSfList = [1.5]; % list of spatial frequency
@@ -53,7 +53,7 @@ stim.SfBWISI = stim.SfBWTest;  % the center of Guassian Function for Sf
 stim.OriBWISI = 360; % BW for Orietation (spread), this is full BW as it need to cover all the orientation
 stim.DynamicNoise = true;  % if you need dynamic noise
 
-stim.BackLum = 1;             % 1: change the background based on stimuli, 0: set teh background to gray
+stim.BackLum = 1;             % 1: change the background based on stimuli, 0: set the background to gray
 if stim.BackLum==1,
     stim.BackGrLum = stim.AdaptLumList(1);
 else stim.BackGrLum=0.5;
@@ -80,7 +80,7 @@ stim.NumberofBlocks = ['     Number of Blocks ' num2str(stim.NumBlock) '        
 % Define saving parameters
 % stim.fold = 'C:\data\Masoud_Psycho_Task\Version2\';
 stim.fold = [cd '\'];
-stim.fName = 'Behavioral_Exp_Subject_Mas';
+stim.fName = 'Behavioral_Exp_Subject_test';
 stim = orientation_discrimination_adaptation(stim);
 
 
